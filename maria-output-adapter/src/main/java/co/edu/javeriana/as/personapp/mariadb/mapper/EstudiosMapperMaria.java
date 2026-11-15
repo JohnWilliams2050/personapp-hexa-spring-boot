@@ -3,6 +3,7 @@ package co.edu.javeriana.as.personapp.mariadb.mapper;
 import java.time.LocalDate;
 import java.time.ZoneId;
 import java.util.Date;
+import java.time.Instant;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -51,7 +52,7 @@ public class EstudiosMapperMaria {
 	}
 
 	private LocalDate validateGraduationDate(Date fecha) {
-		return fecha != null ? fecha.toInstant().atZone(ZoneId.systemDefault()).toLocalDate() : null;
+		return fecha != null ? Instant.ofEpochMilli(fecha.getTime()).atZone(ZoneId.systemDefault()).toLocalDate() : null;
 	}
 
 	private String validateUniversityName(String univer) {

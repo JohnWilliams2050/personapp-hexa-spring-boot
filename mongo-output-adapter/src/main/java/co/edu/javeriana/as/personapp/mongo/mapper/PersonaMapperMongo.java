@@ -58,14 +58,24 @@ public class PersonaMapperMongo {
 	}
 
 	public Person fromAdapterToDomain(PersonaDocument personaDocument) {
+		Person person = fromAdapterToDomainWithoutRelations(personaDocument);
+		person.setStudies(validateStudies(personaDocument.getEstudios()));
+		person.setPhoneNumbers(validatePhones(personaDocument.getTelefonos()));
+		return person;
+	}
+
+	/** Mapea solo los campos propios de la persona. Los mappers hijos (duenio del telefono, persona del estudio) lo usan
+	 * para que no se sigan las referencias bidireccionales hasta el infinito (StackOverflowError).
+	 */
+	public Person fromAdapterToDomainWithoutRelations(PersonaDocument personaDocument) {
 		Person person = new Person();
 		person.setIdentification(personaDocument.getId());
 		person.setFirstName(personaDocument.getNombre());
 		person.setLastName(personaDocument.getApellido());
 		person.setGender(validateGender(personaDocument.getGenero()));
 		person.setAge(validateAge(personaDocument.getEdad()));
-		person.setStudies(validateStudies(personaDocument.getEstudios()));
-		person.setPhoneNumbers(validatePhones(personaDocument.getTelefonos()));
+		person.setStudies(new ArrayList<Study>());
+		person.setPhoneNumbers(new ArrayList<Phone>());
 		return person;
 	}
 

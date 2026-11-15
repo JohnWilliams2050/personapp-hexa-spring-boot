@@ -7,6 +7,7 @@ import org.springframework.beans.factory.annotation.Qualifier;
 import co.edu.javeriana.as.personapp.application.port.in.PersonInputPort;
 import co.edu.javeriana.as.personapp.application.port.out.PersonOutputPort;
 import co.edu.javeriana.as.personapp.common.annotations.UseCase;
+import co.edu.javeriana.as.personapp.common.exceptions.AlreadyExistException;
 import co.edu.javeriana.as.personapp.common.exceptions.NoExistException;
 import co.edu.javeriana.as.personapp.domain.Person;
 import co.edu.javeriana.as.personapp.domain.Phone;
@@ -30,7 +31,7 @@ public class PersonUseCase implements PersonInputPort {
 	}
 
 	@Override
-	public Person create(Person person) {
+	public Person create(Person person) throws AlreadyExistException {
 		log.debug("Into create on Application Domain");
 		return personPersintence.save(person);
 	}
@@ -38,8 +39,10 @@ public class PersonUseCase implements PersonInputPort {
 	@Override
 	public Person edit(Integer identification, Person person) throws NoExistException {
 		Person oldPerson = personPersintence.findById(identification);
-		if (oldPerson != null)
+		if (oldPerson != null){
+			person.setIdentification(identification);
 			return personPersintence.save(person);
+		}
 		throw new NoExistException(
 				"The person with id " + identification + " does not exist into db, cannot be edited");
 	}
@@ -69,7 +72,7 @@ public class PersonUseCase implements PersonInputPort {
 
 	@Override
 	public Integer count() {
-		return findAll().size();
+		return Math.toIntExact(personPersintence.count()); //para que no se cuente por cargar toda la lista de personas, sino que se haga un count en la base de datos.
 	}
 
 	@Override

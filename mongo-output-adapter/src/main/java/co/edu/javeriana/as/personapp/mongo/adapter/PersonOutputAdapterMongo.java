@@ -4,13 +4,18 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.mongodb.core.MongoTemplate;
+import org.springframework.data.mongodb.core.query.Criteria;
+import org.springframework.data.mongodb.core.query.Query;
 
 import com.mongodb.MongoWriteException;
 
 import co.edu.javeriana.as.personapp.application.port.out.PersonOutputPort;
 import co.edu.javeriana.as.personapp.common.annotations.Adapter;
 import co.edu.javeriana.as.personapp.domain.Person;
+import co.edu.javeriana.as.personapp.mongo.document.EstudiosDocument;
 import co.edu.javeriana.as.personapp.mongo.document.PersonaDocument;
+import co.edu.javeriana.as.personapp.mongo.document.TelefonoDocument;
 import co.edu.javeriana.as.personapp.mongo.mapper.PersonaMapperMongo;
 import co.edu.javeriana.as.personapp.mongo.repository.PersonaRepositoryMongo;
 import lombok.extern.slf4j.Slf4j;
@@ -24,6 +29,9 @@ public class PersonOutputAdapterMongo implements PersonOutputPort {
 	
 	@Autowired
 	private PersonaMapperMongo personaMapperMongo;
+
+	@Autowired
+	private MongoTemplate mongoTemplate;
 	
 	@Override
 	public Person save(Person person) {
@@ -40,6 +48,12 @@ public class PersonOutputAdapterMongo implements PersonOutputPort {
 	@Override
 	public Boolean delete(Integer identification) {
 		log.debug("Into delete on Adapter MongoDB");
+		// Person es la raiz de agregacion de sus telefonos y estudios. 
+		// MariaDB los elimina a traves del cascade de JPA (y sus llaves foraneas); 
+		// MongoDB no tiene ninguno, por lo que el adaptador los elimina explicitamente 
+		// para evitar documentos huérfanos.
+		mongoTemplate.remove(Query.query(Criteria.where("primaryDuenio").is(identification)), TelefonoDocument.class);
+		mongoTemplate.remove(Query.query(Criteria.where("primaryPersona").is(identification)), EstudiosDocument.class);
 		personaRepositoryMongo.deleteById(identification);
 		return personaRepositoryMongo.findById(identification).isEmpty();
 	}
@@ -61,4 +75,9 @@ public class PersonOutputAdapterMongo implements PersonOutputPort {
 		}
 	}
 
+	@Override
+	public Long count() {
+		log.debug("Into count on Adapter MongoDB");
+		return personaRepositoryMongo.count();
+	}
 }

@@ -38,11 +38,18 @@ public class ProfesionMapperMaria {
 	}
 
 	public Profession fromAdapterToDomain(ProfesionEntity profesionEntity) {
+		Profession profession = fromAdapterToDomainWithoutRelations(profesionEntity);
+		profession.setStudies(validateStudies(profesionEntity.getEstudios()));
+		return profession;
+	}
+
+	/** Mapea solo los campos propios de la profesion (como PersonaMapperMaria). */
+	public Profession fromAdapterToDomainWithoutRelations(ProfesionEntity profesionEntity) {
 		Profession profession = new Profession();
 		profession.setIdentification(profesionEntity.getId());
 		profession.setName(profesionEntity.getNom());
 		profession.setDescription(validateDescription(profesionEntity.getDes()));
-		profession.setStudies(validateStudies(profesionEntity.getEstudios()));
+		profession.setStudies(new ArrayList<Study>());
 		return profession;
 	}
 

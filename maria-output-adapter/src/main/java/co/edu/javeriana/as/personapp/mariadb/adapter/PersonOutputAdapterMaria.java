@@ -57,5 +57,11 @@ public class PersonOutputAdapterMaria implements PersonOutputPort {
 			return personaMapperMaria.fromAdapterToDomain(personaRepositoryMaria.findById(identification).get());
 		}
 	}
+	//para que no se cuente por cargar toda la lista de personas, sino que se haga un count en la base de datos.
+	@Override
+	public Long count() {
+		log.debug("Into count on Adapter MariaDB");
+		return personaRepositoryMaria.count();
+	}
 
 }

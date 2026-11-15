@@ -58,14 +58,25 @@ public class PersonaMapperMaria {
 	}
 
 	public Person fromAdapterToDomain(PersonaEntity personaEntity) {
+		Person person = fromAdapterToDomainWithoutRelations(personaEntity);
+		person.setStudies(validateStudies(personaEntity.getEstudios()));
+		person.setPhoneNumbers(validatePhones(personaEntity.getTelefonos()));
+		return person;
+	}
+
+	/**
+	 * Mapea solo los campos propios de la persona. Los mappers hijos (dueño del telefono, persona del estudio) lo usan
+	 * para que no se sigan las relaciones bidireccionales persona -> telefonos -> dueño -> telefonos ... para siempre (StackOverflowError).
+	 */
+	public Person fromAdapterToDomainWithoutRelations(PersonaEntity personaEntity) {
 		Person person = new Person();
 		person.setIdentification(personaEntity.getCc());
 		person.setFirstName(personaEntity.getNombre());
 		person.setLastName(personaEntity.getApellido());
 		person.setGender(validateGender(personaEntity.getGenero()));
 		person.setAge(validateAge(personaEntity.getEdad()));
-		person.setStudies(validateStudies(personaEntity.getEstudios()));
-		person.setPhoneNumbers(validatePhones(personaEntity.getTelefonos()));
+		person.setStudies(new ArrayList<Study>());
+		person.setPhoneNumbers(new ArrayList<Phone>());
 		return person;
 	}
 
