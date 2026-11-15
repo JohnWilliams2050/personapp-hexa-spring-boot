@@ -11,6 +11,7 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 public class EstudioModelCli {
 	private Integer ccPer;
+	private String persona;
 	private Integer idProf;
 	private String profesion;
 	private String univer;
