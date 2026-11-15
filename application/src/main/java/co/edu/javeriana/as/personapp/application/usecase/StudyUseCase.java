@@ -32,6 +32,12 @@ public class StudyUseCase implements StudyInputPort {
 	@Override
 	public Study create(Study study) throws AlreadyExistException {
 		log.debug("Into create on Application Domain");
+		Integer ccPer = study.getPerson().getIdentification();
+		Integer idProf = study.getProfession().getIdentification();
+		// save actua como "guardar o actualizar": sin esta validacion, crear sobre una llave existente la sobrescribe
+		if (studyPersintence.findById(ccPer, idProf) != null)
+			throw new AlreadyExistException(
+					"The Study with Person ID " + ccPer + " and Profesion ID " + idProf + " already exists into db, cannot be created");
 		return studyPersintence.save(study);
 	}
 
