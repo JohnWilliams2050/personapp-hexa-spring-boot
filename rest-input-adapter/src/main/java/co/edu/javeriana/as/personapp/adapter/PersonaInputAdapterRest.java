@@ -70,7 +70,9 @@ public class PersonaInputAdapterRest {
 		try {
 			setPersonOutputPortInjection(request.getDatabase());
 			Person person = personInputPort.create(personaMapperRest.fromAdapterToDomain(request));
-			return personaMapperRest.fromDomainToAdapterRestMaria(person);
+			return request.getDatabase().equalsIgnoreCase(DatabaseOption.MARIA.toString())
+					? personaMapperRest.fromDomainToAdapterRestMaria(person)
+					: personaMapperRest.fromDomainToAdapterRestMongo(person);
 		} catch (InvalidOptionException e) {
 			log.warn(e.getMessage());
 			//return new PersonaResponse("", "", "", "", "", "", "");
