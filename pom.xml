@@ -45,8 +45,8 @@
 	</modules>
 	<dependencyManagement>
 		<dependencies>
-			<!-- Bill Of Materials: aligns every Spring / Hibernate / driver version.
-				It only manages versions and adds no dependencies, so domain stays framework-free. -->
+			<!--Bill Of Materials: alinea cada Spring / Hibernate / driver version. 
+				Solo maneja versiones y no agrega dependencias, por lo que el dominio permanece libre de frameworks. -->
 			<dependency>
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-dependencies</artifactId>
@@ -76,9 +76,9 @@
 				<version>3.14.1</version>
 				<configuration>
 					<release>${global.java.version}</release>
-					<!-- needed for @PathVariable without an explicit name -->
+					<!-- se necesita para @PathVariable sin un nombre explícito -->
 					<parameters>true</parameters>
-					<!-- THE LOMBOK FIX: JDK 23+ no longer auto-discovers processors -->
+					<!-- El arreglo de Lombok : JDK 23+ ya no auto-descubre procesadores -->
 					<annotationProcessorPaths>
 						<path>
 							<groupId>org.projectlombok</groupId>
