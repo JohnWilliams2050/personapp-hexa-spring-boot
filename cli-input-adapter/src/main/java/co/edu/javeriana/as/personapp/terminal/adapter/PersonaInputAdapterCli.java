@@ -41,8 +41,9 @@ public class PersonaInputAdapterCli {
 	@Autowired
 	private EstudioMapperCli estudioMapperCli;
 
-
-	//El CLI es una sesion de un solo usuario: la base de datos elegida en el menu se mantiene seleccionada hasta que el usuario regresa, por lo que mantenerla en un campo es correcto aqui (a diferencia de REST).
+	// La CLI es una sesión de un solo usuario: la base de datos elegida en el menú
+	// permanece seleccionada hasta que el usuario regresa, por lo que mantenerla en un campo
+	// es correcto aquí (a diferencia de REST).
 	PersonInputPort personInputPort;
 
 	public void setPersonOutputPortInjection(String dbOption) throws InvalidOptionException {
@@ -55,10 +56,10 @@ public class PersonaInputAdapterCli {
 		}
 	}
 
-	// ---------- Read ----------
+	// ---------- Lectura ----------
 
 	public void historial() {
-		log.info("Into historial PersonaEntity in Input Adapter");
+		log.info("Dentro de historial PersonaEntity en Input Adapter");
 		List<Person> personas = personInputPort.findAll();
 		if (personas.isEmpty())
 			System.out.println("No hay personas registradas");
@@ -73,12 +74,12 @@ public class PersonaInputAdapterCli {
 		System.out.println("Total de personas: " + personInputPort.count());
 	}
 
-	// ---------- Read: agregacion (telefonos y sus estudios) ----------
+	// ---------- Lectura: agregación (teléfonos y estudios de la persona) ----------
 
 	public void telefonos(Integer cc) throws NoExistException {
 		var telefonos = personInputPort.getPhones(cc);
 		if (telefonos.isEmpty())
-			System.out.println("La persona " + cc + " no tiene telefonos");
+			System.out.println("La persona " + cc + " no tiene teléfonos");
 		telefonos.stream().map(telefonoMapperCli::fromDomainToAdapterCli).forEach(System.out::println);
 	}
 
@@ -89,7 +90,7 @@ public class PersonaInputAdapterCli {
 		estudios.stream().map(estudioMapperCli::fromDomainToAdapterCli).forEach(System.out::println);
 	}
 
-	// ---------- Create / Update / Delete ----------
+	// ---------- Crear / Actualizar / Eliminar ----------
 
 	public void crear(PersonaModelCli persona) throws AlreadyExistException {
 		Person creada = personInputPort.create(personaMapperCli.fromAdapterCliToDomain(persona));
