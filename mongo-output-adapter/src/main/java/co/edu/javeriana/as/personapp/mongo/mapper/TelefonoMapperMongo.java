@@ -19,12 +19,11 @@ public class TelefonoMapperMongo {
 		TelefonoDocument telefonoDocument = new TelefonoDocument();
 		telefonoDocument.setId(phone.getNumber());
 		telefonoDocument.setOper(phone.getCompany());
-		telefonoDocument.setPrimaryDuenio(validateDuenio(phone.getOwner()));
+		// Documento minimo (solo el id): @DocumentReference solo guarda el id (como EstudiosMapperMongo)
+		PersonaDocument duenio = new PersonaDocument();
+		duenio.setId(phone.getOwner().getIdentification());
+		telefonoDocument.setPrimaryDuenio(duenio);
 		return telefonoDocument;
-	}
-
-	private PersonaDocument validateDuenio(@NonNull Person owner) {
-		return owner != null ? personaMapperMongo.fromDomainToAdapter(owner) : new PersonaDocument();
 	}
 
 	public Phone fromAdapterToDomain(TelefonoDocument telefonoDocument) {
