@@ -28,14 +28,7 @@ docker compose run --build --rm cli
 ### Opción 2: API REST con Swagger
 
 ```bash
-# 1. Levantar solo las bases de datos
-docker compose up -d mariadb mongodb
-
-# 2. Compilar todo el proyecto
-mvn -DskipTests clean package
-
-# 3. Ejecutar la API
-java -jar rest-input-adapter/target/rest-input-adapter-0.0.1-SNAPSHOT.jar
+docker compose up -d --build
 ```
 
 Cuando la consola muestre `Started PersonAppRestApi`, abrir **http://localhost:3000/swagger-ui.html**. Para detenerla: `Ctrl+C`.
