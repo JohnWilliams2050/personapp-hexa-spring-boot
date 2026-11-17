@@ -33,13 +33,17 @@ public class PersonUseCase implements PersonInputPort {
 	@Override
 	public Person create(Person person) throws AlreadyExistException {
 		log.debug("Into create on Application Domain");
+		if (personPersintence.findById(person.getIdentification()) != null)
+			throw new AlreadyExistException(
+					"The person with id " + person.getIdentification() + " already exists into db, cannot be created");
 		return personPersintence.save(person);
 	}
 
 	@Override
 	public Person edit(Integer identification, Person person) throws NoExistException {
 		Person oldPerson = personPersintence.findById(identification);
-		if (oldPerson != null){
+		if (oldPerson != null) {
+			// The id in the path/command wins: an edit can never change which person is edited
 			person.setIdentification(identification);
 			return personPersintence.save(person);
 		}
@@ -72,7 +76,8 @@ public class PersonUseCase implements PersonInputPort {
 
 	@Override
 	public Integer count() {
-		return Math.toIntExact(personPersintence.count()); //para que no se cuente por cargar toda la lista de personas, sino que se haga un count en la base de datos.
+		// Counted by the database, not by loading every person into memory
+		return Math.toIntExact(personPersintence.count());
 	}
 
 	@Override
