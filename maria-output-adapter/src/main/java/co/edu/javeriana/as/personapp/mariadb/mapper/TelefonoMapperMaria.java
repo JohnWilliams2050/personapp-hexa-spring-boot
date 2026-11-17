@@ -19,12 +19,9 @@ public class TelefonoMapperMaria {
 		TelefonoEntity telefonoEntity = new TelefonoEntity();
 		telefonoEntity.setNum(phone.getNumber());
 		telefonoEntity.setOper(phone.getCompany());
-		telefonoEntity.setDuenio(validateDuenio(phone.getOwner()));
+		// Entidad minima (solo el id): basta para la FK y evita mapear una persona incompleta (como EstudiosMapperMaria)
+		telefonoEntity.setDuenio(new PersonaEntity(phone.getOwner().getIdentification()));
 		return telefonoEntity;
-	}
-
-	private PersonaEntity validateDuenio(@NonNull Person owner) {
-		return owner != null ? personaMapperMaria.fromDomainToAdapter(owner) : new PersonaEntity();
 	}
 
 	public Phone fromAdapterToDomain(TelefonoEntity telefonoEntity) {
