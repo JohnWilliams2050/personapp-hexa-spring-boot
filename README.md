@@ -286,16 +286,6 @@ Al ejecutar la CLI aparece el menú principal con los módulos **Persona, Profes
 └── pom.xml                  POM padre (BOM de Spring Boot, Lombok, compilador)
 ```
 
-## Flujo de trabajo en Git
-
-```bash
-git checkout develop && git pull
-git checkout -b feat/<mi-parte>
-# ... cambios ...
-git add . && git commit -m "mensaje"
-git push -u origin feat/<mi-parte>
-```
-
 Luego abrir un *Pull Request* hacia `develop`.
 
 ## Licencia
