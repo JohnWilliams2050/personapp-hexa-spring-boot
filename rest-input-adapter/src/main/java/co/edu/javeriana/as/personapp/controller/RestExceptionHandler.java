@@ -15,8 +15,8 @@ import co.edu.javeriana.as.personapp.model.response.Response;
 import lombok.extern.slf4j.Slf4j;
 
 /**
- * Translates application exceptions into HTTP responses in one place, so the domain and the
- * use cases stay unaware of HTTP and the controller stays free of try/catch blocks.
+ * Centraliza la conversión de excepciones de la aplicación en respuestas HTTP, para que el dominio
+ * y los casos de uso no dependan de HTTP y el controlador no necesite bloques try/catch.
  */
 @Slf4j
 @RestControllerAdvice
@@ -39,7 +39,7 @@ public class RestExceptionHandler {
 
 	@ExceptionHandler(MethodArgumentTypeMismatchException.class)
 	public ResponseEntity<Response> badPathVariable(MethodArgumentTypeMismatchException e) {
-		return build(HttpStatus.BAD_REQUEST, e.getName() + " must be a number: " + e.getValue());
+		return build(HttpStatus.BAD_REQUEST, e.getName() + " debe ser un número: " + e.getValue());
 	}
 
 	private ResponseEntity<Response> build(HttpStatus status, String message) {

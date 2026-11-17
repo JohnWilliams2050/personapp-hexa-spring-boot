@@ -27,10 +27,6 @@ import co.edu.javeriana.as.personapp.model.response.Response;
 import co.edu.javeriana.as.personapp.model.response.TelefonoResponse;
 import lombok.extern.slf4j.Slf4j;
 
-/**
- * HTTP layer only: routes, verbs and status codes. All the work is delegated to the
- * input adapter, and errors are translated to HTTP by {@link RestExceptionHandler}.
- */
 @Slf4j
 @RestController
 @RequestMapping(path = "/api/v1/persona", produces = MediaType.APPLICATION_JSON_VALUE)
@@ -41,7 +37,7 @@ public class PersonaControllerV1 {
 	
 	@GetMapping("/{database}")
 	public List<PersonaResponse> personas(@PathVariable String database) throws InvalidOptionException {
-		log.info("Into personas REST API");
+		log.info("Solicitud recibida por la API REST de personas");
 		return personaInputAdapterRest.historial(database);
 	}
 
@@ -72,21 +68,21 @@ public class PersonaControllerV1 {
 	@ResponseStatus(HttpStatus.CREATED)
 	public PersonaResponse crearPersona(@RequestBody PersonaRequest request)
 			throws InvalidOptionException, AlreadyExistException {
-		log.info("Into crearPersona REST API");
+		log.info("Solicitud de creación recibida por la API REST de personas");
 		return personaInputAdapterRest.crearPersona(request);
 	}
 
 	@PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
 	public PersonaResponse editarPersona(@RequestBody PersonaRequest request)
 			throws InvalidOptionException, NoExistException {
-		log.info("Into editarPersona REST API");
+		log.info("Solicitud de edición recibida por la API REST de personas");
 		return personaInputAdapterRest.editarPersona(request);
 	}
 
 	@DeleteMapping("/{database}/{cc}")
 	public Response eliminarPersona(@PathVariable String database, @PathVariable Integer cc)
 			throws InvalidOptionException, NoExistException {
-		log.info("Into eliminarPersona REST API");
+		log.info("Solicitud de eliminación recibida por la API REST de personas");
 		return personaInputAdapterRest.eliminarPersona(database, cc);
 	}
 }

@@ -26,12 +26,13 @@ public class PersonaMapperRest {
 				database,
 				"OK");
 	}
-	//Anteriormente el mapper tiraba el request a un lado y retornaba una persona vacia.
-	//Entonces cada campo estaba en null.
-	//Los output mappers tiraban la excepcion en validateGenero(@NonNull Gender gender)
-	//Por esa razon se agrego la logica de validacion de genero y edad en este mapper.
-	//Y tambien se hizo para que el mapper reciba un request y retorne una persona con los campos llenos.
-	//Una persona invalida nunca llega a los casos de uso o a los adaptadores de persitencia.
+	// Anteriormente, el mapeador descartaba la solicitud y devolvía una persona vacía.
+	// Por eso, todos los campos quedaban en null.
+	// Los mapeadores de salida lanzaban la excepción en validateGenero(@NonNull Gender gender).
+	// Por esa razón, se agregó la lógica de validación del género y la edad en este mapeador.
+	// También se hizo para que el mapeador recibiera una solicitud y devolviera una persona
+	// con todos sus campos completos.
+	// Una persona no válida nunca llega a los casos de uso ni a los adaptadores de persistencia.
 	public Person fromAdapterToDomain(PersonaRequest request) {
 		Person person = new Person();
 		person.setIdentification(validateDni(request.getDni()));
@@ -45,13 +46,13 @@ public class PersonaMapperRest {
 		try {
 			return Integer.parseInt(required(dni, "dni"));
 		} catch (NumberFormatException e) {
-			throw new IllegalArgumentException("dni must be a number: " + dni);
+			throw new IllegalArgumentException("El DNI debe ser un número: " + dni);
 		}
 	}
 
 	private String required(String value, String field) {
 		if (value == null || value.isBlank())
-			throw new IllegalArgumentException(field + " is required");
+			throw new IllegalArgumentException("El campo " + field + " es obligatorio");
 		return value.trim();
 	}
 
@@ -61,7 +62,7 @@ public class PersonaMapperRest {
 			return Gender.FEMALE;
 		if ("M".equalsIgnoreCase(value) || "MALE".equalsIgnoreCase(value))
 			return Gender.MALE;
-		throw new IllegalArgumentException("sex must be M or F: " + sex);
+		throw new IllegalArgumentException("El sexo debe ser M o F: " + sex);
 	}
 
 	private Integer validateAge(String age) {
@@ -70,10 +71,10 @@ public class PersonaMapperRest {
 		try {
 			int value = Integer.parseInt(age.trim());
 			if (value < 0)
-				throw new IllegalArgumentException("age cannot be negative: " + age);
+				throw new IllegalArgumentException("La edad no puede ser negativa: " + age);
 			return value;
 		} catch (NumberFormatException e) {
-			throw new IllegalArgumentException("age must be a number: " + age);
+			throw new IllegalArgumentException("La edad debe ser un número: " + age);
 		}
 	}
 }
