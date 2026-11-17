@@ -1,4 +1,4 @@
-<project xmlns="http://maven.apache.org/POM/4.0.0"
+  <project xmlns="http://maven.apache.org/POM/4.0.0"
 	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
 	xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 https://maven.apache.org/xsd/maven-4.0.0.xsd">
 	<modelVersion>4.0.0</modelVersion>
@@ -29,13 +29,13 @@
 		</dependency>		
 		<dependency>
 			<groupId>org.springframework.boot</groupId>
-			<artifactId>spring-boot-starter-web</artifactId>
-			<version>${global.springframework.boot.version}</version>
+			<artifactId>spring-boot-starter-webmvc</artifactId> <!--Se cambio a spring-boot-starter-webmvc dado que el web de 2.7 y antes ya no es compatible -->
+			<version>${global.springframework.boot.version}</version> <!--Usa la versión gestionada por el BOM -->
 		</dependency>
 		<dependency>
 			<groupId>org.springdoc</groupId>
-			<artifactId>springdoc-openapi-ui</artifactId>
-			<version>1.7.0</version>
+			<artifactId>springdoc-openapi-starter-webmvc-ui</artifactId> <!--Se cambio a springdoc-openapi-starter-webmvc-ui dado que la nueva version tiene diferentes starters para MVC y WebFlux -->
+			<version>${springdoc.version}</version> <!--Usa la versión gestionada por el BOM -->
 		</dependency>
 	</dependencies>
 	<build>
@@ -44,6 +44,13 @@
 				<groupId>org.springframework.boot</groupId>
 				<artifactId>spring-boot-maven-plugin</artifactId>
 				<version>${global.springframework.boot.version}</version>
+				<executions>
+					<execution>
+						<goals>
+							<goal>repackage</goal>
+						</goals>
+					</execution>
+				</executions>
 				<configuration>
 					<excludes>
 						<exclude>

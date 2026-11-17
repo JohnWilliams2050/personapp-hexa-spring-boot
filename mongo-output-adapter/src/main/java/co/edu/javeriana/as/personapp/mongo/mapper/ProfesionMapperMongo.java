@@ -38,11 +38,18 @@ public class ProfesionMapperMongo {
 	}
 
 	public Profession fromAdapterToDomain(ProfesionDocument profesionDocument) {
+		Profession profession = fromAdapterToDomainWithoutRelations(profesionDocument);
+		profession.setStudies(validateStudies(profesionDocument.getEstudios()));
+		return profession;
+	}
+
+	/** Mapea solo los campos propios de la profesion (como PersonaMapperMongo). */
+	public Profession fromAdapterToDomainWithoutRelations(ProfesionDocument profesionDocument) {
 		Profession profession = new Profession();
 		profession.setIdentification(profesionDocument.getId());
 		profession.setName(profesionDocument.getNom());
 		profession.setDescription(validateDescription(profesionDocument.getDes()));
-		profession.setStudies(validateStudies(profesionDocument.getEstudios()));
+		profession.setStudies(new ArrayList<Study>());
 		return profession;
 	}
 

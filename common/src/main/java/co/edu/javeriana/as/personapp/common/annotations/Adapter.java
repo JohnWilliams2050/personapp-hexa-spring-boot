@@ -11,6 +11,7 @@ import java.lang.annotation.Target;
 import org.springframework.core.annotation.AliasFor;
 import org.springframework.stereotype.Component;
 
+//tecnicamente es un alias para @Component, pero nos permite abstraernos de Spring framework y no tener que cambiar el nombre de la anotacion si cambiamos de framework.
 @Documented
 @Retention(RUNTIME)
 @Target(TYPE)

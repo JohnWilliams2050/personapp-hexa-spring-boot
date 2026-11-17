@@ -4,7 +4,7 @@ import java.util.List;
 
 import java.util.stream.Collectors;
 
-import javax.transaction.Transactional;
+import jakarta.transaction.Transactional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 
@@ -56,6 +56,12 @@ public class PersonOutputAdapterMaria implements PersonOutputPort {
 		} else {
 			return personaMapperMaria.fromAdapterToDomain(personaRepositoryMaria.findById(identification).get());
 		}
+	}
+	//para que no se cuente por cargar toda la lista de personas, sino que se haga un count en la base de datos.
+	@Override
+	public Long count() {
+		log.debug("Into count on Adapter MariaDB");
+		return personaRepositoryMaria.count();
 	}
 
 }

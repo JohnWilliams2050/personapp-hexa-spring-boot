@@ -10,15 +10,15 @@
 	<description>App Hexagonal (Clean Architecture) Multi Module PersonAPP</description>
 	<packaging>pom</packaging>
 	<properties>
-		<maven.compiler.source>${global.java.version}</maven.compiler.source>
-		<maven.compiler.target>${global.java.version}</maven.compiler.target>
+		<maven.compiler.release>${global.java.version}</maven.compiler.release>
 		<java.version>${global.java.version}</java.version>
 		<project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
 		<project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
 		<revision>0.0.1-SNAPSHOT</revision>
-		<global.java.version>11</global.java.version>
-		<global.springframework.boot.version>2.7.11</global.springframework.boot.version>
-		<global.springframework.version>5.3.27</global.springframework.version>
+		<global.java.version>25</global.java.version>
+		<global.springframework.boot.version>4.1.2</global.springframework.boot.version>
+		<lombok.version>1.18.46</lombok.version>
+		<springdoc.version>3.1.0</springdoc.version>
 	</properties>
 	<licenses>
 		<license>
@@ -43,17 +43,51 @@
 		<module>rest-input-adapter</module>
 		<module>cli-input-adapter</module>
 	</modules>
+	<dependencyManagement>
+		<dependencies>
+			<!--Bill Of Materials: alinea cada Spring / Hibernate / driver version. 
+				Solo maneja versiones y no agrega dependencias, por lo que el dominio permanece libre de frameworks. -->
+			<dependency>
+				<groupId>org.springframework.boot</groupId>
+				<artifactId>spring-boot-dependencies</artifactId>
+				<version>${global.springframework.boot.version}</version>
+				<type>pom</type>
+				<scope>import</scope>
+			</dependency>
+		</dependencies>
+	</dependencyManagement>
 	<dependencies>
 		<dependency>
 			<groupId>org.projectlombok</groupId>
 			<artifactId>lombok</artifactId>
-			<version>1.18.26</version>
+			<version>${lombok.version}</version>
 			<scope>provided</scope>
 		</dependency>
 		<dependency>
 			<groupId>org.apache.logging.log4j</groupId>
 			<artifactId>log4j-to-slf4j</artifactId>
-			<version>2.20.0</version>
 		</dependency>
 	</dependencies>
+	<build>
+		<plugins>
+			<plugin>
+				<groupId>org.apache.maven.plugins</groupId>
+				<artifactId>maven-compiler-plugin</artifactId>
+				<version>3.14.1</version>
+				<configuration>
+					<release>${global.java.version}</release>
+					<!-- se necesita para @PathVariable sin un nombre explícito -->
+					<parameters>true</parameters>
+					<!-- El arreglo de Lombok : JDK 23+ ya no auto-descubre procesadores -->
+					<annotationProcessorPaths>
+						<path>
+							<groupId>org.projectlombok</groupId>
+							<artifactId>lombok</artifactId>
+							<version>${lombok.version}</version>
+						</path>
+					</annotationProcessorPaths>
+				</configuration>
+			</plugin>
+		</plugins>
+	</build>
 </project>

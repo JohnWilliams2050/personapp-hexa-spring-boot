@@ -25,8 +25,8 @@ public class EstudiosMapperMongo {
 	public EstudiosDocument fromDomainToAdapter(Study study) {
 		EstudiosDocument estudio = new EstudiosDocument();
 		estudio.setId(validateId(study.getPerson().getIdentification(), study.getProfession().getIdentification()));
-		estudio.setPrimaryPersona(validatePrimaryPersona(study.getPerson()));
-		estudio.setPrimaryProfesion(validatePrimaryProfesion(study.getProfession()));
+		estudio.setPrimaryPersona(referenciaPersona(study.getPerson()));
+		estudio.setPrimaryProfesion(referenciaProfesion(study.getProfession()));
 		estudio.setFecha(validateFecha(study.getGraduationDate()));
 		estudio.setUniver(validateUniver(study.getUniversityName()));
 		return estudio;
@@ -36,12 +36,17 @@ public class EstudiosMapperMongo {
 		return identificationPerson + "-" + identificationProfession;
 	}
 
-	private PersonaDocument validatePrimaryPersona(@NonNull Person person) {
-		return person != null ? personaMapperMongo.fromDomainToAdapter(person) : new PersonaDocument();
+	// Referencia mínima (solo id): @DocumentReference guarda únicamente el _id y se evita el ciclo
+	private PersonaDocument referenciaPersona(Person person) {
+			PersonaDocument doc = new PersonaDocument();
+			doc.setId(person.getIdentification());
+			return doc;
 	}
 
-	private ProfesionDocument validatePrimaryProfesion(@NonNull Profession profession) {
-		return profession != null ? profesionMapperMongo.fromDomainToAdapter(profession) : new ProfesionDocument();
+	private ProfesionDocument referenciaProfesion(Profession profession) {
+			ProfesionDocument doc = new ProfesionDocument();
+			doc.setId(profession.getIdentification()); // supone ProfesionDocument.setId(Integer); falta confirmarlo
+			return doc;
 	}
 
 	private LocalDate validateFecha(LocalDate graduationDate) {
@@ -54,11 +59,11 @@ public class EstudiosMapperMongo {
 
 	public Study fromAdapterToDomain(EstudiosDocument estudiosDocument) {
 		Study study = new Study();
-		study.setPerson(personaMapperMongo.fromAdapterToDomain(estudiosDocument.getPrimaryPersona()));
-		study.setProfession(profesionMapperMongo.fromAdapterToDomain(estudiosDocument.getPrimaryProfesion()));
+		study.setPerson(personaMapperMongo.fromAdapterToDomainWithoutRelations(estudiosDocument.getPrimaryPersona()));
+		study.setProfession(profesionMapperMongo.fromAdapterToDomainWithoutRelations(estudiosDocument.getPrimaryProfesion()));
 		study.setGraduationDate(validateGraduationDate(estudiosDocument.getFecha()));
 		study.setUniversityName(validateUniversityName(estudiosDocument.getUniver()));
-		return null;
+		return study;
 	}
 
 	private LocalDate validateGraduationDate(LocalDate fecha) {
